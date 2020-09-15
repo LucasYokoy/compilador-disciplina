@@ -29,5 +29,6 @@ def syntactical_analyser_function(input_path):
     print(symbol_table)
 
 
-path = "C:/Users/Lucas/Documents/Compilador/compiler/test/test_file.txt"
-syntactical_analyser_function(input_path=path)
+if __name__ == "__main__":
+    path = "C:/Users/Lucas/Documents/Compilador/compiler/test/test_file.txt"
+    syntactical_analyser_function(input_path=path)
