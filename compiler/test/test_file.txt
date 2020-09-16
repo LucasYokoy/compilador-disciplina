@@ -1,4 +1,5 @@
 inicio
+    {comentario exemplo}
     varinicio
         A lit;
         B inteiro;
