@@ -18,35 +18,36 @@ def code_splitter(path):
 
     for line_number, line in enumerate(split_code):
         # first, trim the text from \n and trailing \s characters
-        new_line = line.replace("\n", "")
-        new_line = re.sub("\\\\n", "\\n", new_line)
+        new_line = re.sub(r".*\\n$", "", line)
+        # new_line = re.sub("\\\\n", "\\n", new_line)
         new_line = new_line.strip()
+
+        # use an exclusive combination of characters as a temporary separator
+        temp_separator = "SPACE"
 
         # Detect special symbols, such as (, ), +, *, ;, etc (look up in the tokens table),
         # then insert a blank space before and after them.
         # this ensures these symbols are isolated, when the code is split by "\s"
         special_symbols = ["<=", "<>", "<-", "=", "<", ">", "+", "-", "*", "/", ")", "(", ";"]
         for symbol_index, symbol in enumerate(special_symbols):
-            new_line = re.sub(re.escape(symbol), f" {hex(symbol_index)} ", new_line)
+            new_line = re.sub(re.escape(symbol), f" {temp_separator}{symbol_index}{temp_separator} ", new_line)
         for symbol_index, symbol in enumerate(special_symbols):
-            new_line = re.sub(str(hex(symbol_index)), f" {symbol} ", new_line)
+            new_line = re.sub(str(f"{temp_separator}{symbol_index}{temp_separator}"), f" {symbol} ", new_line)
 
         # then detect comments and erases spaces, to make sure they count as a single word during compilation.
-        # use "\\\\n" as temporary separator, because this character was excluded in the second operation of this loop
-        temporary_separator = "\\\\n"
-        if re.search(r"{.*}", new_line):
-            new_line = re.sub(" ", temporary_separator, new_line)
-        # do the same with strings. But strings shouldn't be altered
-        string_list = re.findall(r"\".*\"", new_line)
+        # do the same with strings. Remember that the content of neither should be altered
+        string_list = re.findall(r"\".*\"|{.*}", new_line)
         if string_list:
-            for string in string_list:
-                new_line = re.sub(string, string.replace(" ", temporary_separator), new_line)
+            for match in string_list:
+                match_altered = re.sub(r" ", temp_separator, match)
+                new_line = new_line.replace(match, match_altered)
+
         # turn that list of string into a list of lists of words, separating the strings on the list by blank space
         new_line = new_line.split()
 
-        # now look for comments and strings, and turn the temporary_separator back into blank spaces
+        # now look for comments and strings, and turn the temp_separator back into blank spaces
         for word_index, word in enumerate(new_line):
-            new_line[word_index] = re.sub(temporary_separator, " ", word)
+            new_line[word_index] = re.sub(temp_separator, " ", word)
 
         # finally, append the new line to the split_code
         split_code[line_number] = new_line
