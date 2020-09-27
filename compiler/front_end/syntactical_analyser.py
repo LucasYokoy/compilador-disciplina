@@ -2,8 +2,8 @@
 # imports the lexical analyser (LA) as a function
 # imports the code_splitter
 # from compiler.front_end import lexical_analyser as LA
-from compiler.front_end.lexical_analyser import lexical_analyser_function as laf
-from compiler.front_end.lexical_analyser import code_splitter
+from compiler.front_end.lexical_analyser.lexical_analyser import lexical_analyser_function as laf
+from compiler.front_end.lexical_analyser.lexical_analyser import code_splitter
 from compiler.symbol_table import symbol_table
 
 

@@ -1,6 +1,7 @@
 # imports the symbol_table
 from compiler.symbol_table import symbol_table
 import re
+from compiler.front_end.lexical_analyser.automata_class import Automata
 
 
 # global variable: split code
@@ -52,23 +53,37 @@ def code_splitter(path):
         # finally, append the new line to the split_code
         split_code[line_number] = new_line
 
-    print(split_code)
-
 
 # character classifier function:
 # takes a character as argument
+def character_classifier(character):
     # classifies the character as letter,  digit,  or special symbol
+    alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+    numbers = '1234567890'
     # checks all possibilities on a stream of if else,  and returns the type as a corresponding number.
-        # if it's a letter,  or a digit,  return D our L
-        # else,  return the character itself (implies it's a ;, ), (,  etc).
+    # if it's a letter, L
+    if character in alphabet:
+        return 'L'
+    # if it's a digit, return D
+    elif character in numbers:
+        return 'D'
+    else:
+    # else, return the character itself (implies it's a ;, ), (,  etc).
+        return character
+
 
 # automaton function:
 # receives the word as an argument
+def automaton_function(automaton, word):
     # loops through each character in the word
+    for character in word:
         # calls the character classifier function for the character,
-        # and returns the character's class (a corresponding numeric code)
+        input = character_classifier(character)
         # runs the character's class,  into the automata,  as a transition of state
+        automaton.state_transition(input=input)
     # throws an error if the state it ends on isn't a final state (Exception)
+    if(automaton.get_state() == 'ERROR'):
+        raise Exception
     # generates token based on the final state of the automata
         # given the final state of the automaton,  determine token
         # tuple in the form (token, word, attributes)
@@ -80,6 +95,8 @@ def lexical_analyser_function():
     for i in range(10):
         yield "stub", "", ""
     yield "EOF", "", ""
+    # sets up the automaton
+    automaton = Automata()
     # uses a generator
         # loops through each line on the split code (with the number of the line)
             # loops through each word on the line
@@ -87,9 +104,11 @@ def lexical_analyser_function():
                     # calls the automaton function for that word
                     # if the token is an id,  verify if it's already in the symbol table
                         # if so, return the token that is already on the table
+                        # remember to reset the automaton
                 #  if the automaton throws an Exception,  the token will be:
                 # ("ERROR", f"ERROR: invalid symbol at {line_number}: "{word}"", "{line_number}, {word_number}")
                     #  also print: f"ERROR: invalid symbol at {line_number}: "{word}""
+                    # remember to reset the automaton
                 #  yields the token tuple
         # as soon as the loop ends,  generate token ("EOF", "", "")
             # yields the token tuple
