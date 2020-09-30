@@ -107,11 +107,9 @@ def lexical_analyser_function():
                     # calls the automaton function for that word
                     # if the token is an id,  verify if it's already in the symbol table
                         # if so, return the token that is already on the table
-                        # remember to reset the automaton
                 #  if the automaton throws an Exception,  the token will be:
                 # ("ERROR", f"ERROR: invalid symbol at {line_number}: "{word}"", "{line_number}, {word_number}")
                     #  also print: f"ERROR: invalid symbol at {line_number}: "{word}""
-                    # remember to reset the automaton
                 #  yields the token tuple
         # as soon as the loop ends,  generate token ("EOF", "", "")
             # yields the token tuple

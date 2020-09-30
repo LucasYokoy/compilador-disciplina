@@ -20,8 +20,9 @@ class Automata:
     def finish(self):
         # gives the final state or an error
         if self.state in self.final_states:
+            final_state = self.get_state()
             self.reset_state()
-            return self.get_state()
+            return final_state
         else:
             self.reset_state()
             return 'ERROR'
