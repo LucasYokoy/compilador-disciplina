@@ -58,7 +58,8 @@ def code_splitter(path):
 # takes a character as argument
 def character_classifier(character):
     # classifies the character as letter,  digit,  or special symbol
-    alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+    alphabet = 'abcdefghijklmnopqrstuvwxyzãõáéíóúâêîôûüç'
+    alphabet = alphabet + alphabet.upper()
     numbers = '1234567890'
     # checks all possibilities on a stream of if else,  and returns the type as a corresponding number.
     # if it's a letter, L
@@ -78,11 +79,13 @@ def automaton_function(automaton, word):
     # loops through each character in the word
     for character in word:
         # calls the character classifier function for the character,
-        input = character_classifier(character)
+        char_input = character_classifier(character)
         # runs the character's class,  into the automata,  as a transition of state
-        automaton.state_transition(input=input)
+        automaton.state_transition(char_input=char_input)
+    # gets the final state of the automaton
+    final_state = automaton.finish()
     # throws an error if the state it ends on isn't a final state (Exception)
-    if(automaton.get_state() == 'ERROR'):
+    if final_state == 'ERROR':
         raise Exception
     # generates token based on the final state of the automata
         # given the final state of the automaton,  determine token
