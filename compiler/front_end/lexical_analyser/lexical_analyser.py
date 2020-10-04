@@ -87,10 +87,9 @@ def automaton_function(automaton, word):
     # throws an error if the state it ends on isn't a final state (Exception)
     if final_state == 'ERROR':
         raise Exception
-    # generates token based on the final state of the automata
-        # given the final state of the automaton,  determine token
-        # tuple in the form (token, word, attributes)
-    # returns the tuple
+    else:
+        # otherwise, returns the final state
+        return final_state
 
 
 # analyser function:
@@ -105,6 +104,9 @@ def lexical_analyser_function():
             # loops through each word on the line
                 #  wrap in try catch
                     # calls the automaton function for that word
+                    # generates token based on the final state of the automata
+                        # given the final state of the automaton,  determine token
+                        # tuple in the form (token, word, attributes)
                     # if the token is an id,  verify if it's already in the symbol table
                         # if so, return the token that is already on the table
                 #  if the automaton throws an Exception,  the token will be:
