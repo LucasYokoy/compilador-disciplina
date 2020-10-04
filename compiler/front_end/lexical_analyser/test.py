@@ -35,3 +35,7 @@ print(final_state)
 automaton.state_transition('a')
 final_state = automaton.finish()
 print(final_state)
+
+automaton.state_transition('§')
+final_state = automaton.finish()
+print(final_state)
