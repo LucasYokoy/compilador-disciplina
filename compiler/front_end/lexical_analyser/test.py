@@ -5,7 +5,7 @@ transition_table = {
     'q1': {'b': 'q2'},
     'q2': {'c': 'q3', 'a': 'q4'},
     'q3': {'d': 'q4'},
-    'q4': {'a': 'q3'},
+    'q4': {'.': 'q3'},
 }
 initial_state = 'q0'
 final_state = ['q2', 'q4']
@@ -23,6 +23,15 @@ automaton.state_transition('b')
 automaton.state_transition('c')
 automaton.state_transition('d')
 automaton.state_transition('a')
+final_state = automaton.finish()
+print(final_state)
+
+automaton.state_transition('a')
+automaton.state_transition('b')
+automaton.state_transition('c')
+automaton.state_transition('d')
+automaton.state_transition('§')
+automaton.state_transition('d')
 final_state = automaton.finish()
 print(final_state)
 
