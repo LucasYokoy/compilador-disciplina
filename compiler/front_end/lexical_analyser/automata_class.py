@@ -10,6 +10,7 @@ class Automata:
         self.initial_state = initial_state
         self.final_states = final_states
         self.transition_table = transition_table_dict
+        self.transition_table['pit'] = {}
 
     def state_transition(self, char_input):
         # makes the transition to the next state

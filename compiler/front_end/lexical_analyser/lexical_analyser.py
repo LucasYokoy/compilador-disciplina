@@ -1,5 +1,6 @@
 # imports the symbol_table
 from compiler.symbol_table import symbol_table
+import compiler.front_end.lexical_analyser.mgol_automaton as mgol_a
 import re
 from compiler.front_end.lexical_analyser.automata_class import Automata
 
@@ -92,10 +93,35 @@ def automaton_function(automaton, word):
         return final_state
 
 
+RESERVED_WORDS = ['inicio', 'varinicio', 'varfim', 'escreva', 'leia', 'se', 'entao', 'fimse', 'fim']
+
+
+def generate_token(final_state, word):
+    # given the final state of the automaton, determine token
+    # tuple in the form (lexeme, token, type='') the last parameter should be null, as required
+    # if the token is a reserved word, the token will be a ('word', 'word', '')
+    if word in RESERVED_WORDS:
+        return word, word, ''
+    # if the token is an id, verify if the lexeme is already in the symbol table
+    # if so, return the token that is already on the table
+    # otherwise, create a new token in the end
+    if final_state == 'id':
+        for token in symbol_table:
+            if token[0] == word:
+                return token
+    # if it's a comment, return an empty token
+    if final_state == 'comment':
+        return '', '', ''
+    # if it's anything else, return the word and the final_state
+    return word, final_state, ''
+
+
 # analyser function:
 def lexical_analyser_function():
     # sets up the automaton
-    automaton = Automata()
+    automaton = Automata(transition_table_dict=mgol_a.transition_table,
+                         initial_state=mgol_a.initial_state,
+                         final_states=mgol_a.final_states)
     # uses a generator
     # loops through each line on the split code (with the number of the line)
     for line_number, line in enumerate(split_code):
@@ -105,24 +131,23 @@ def lexical_analyser_function():
             # noinspection PyBroadException
             try:
                 # calls the automaton function for that word
-                type = automaton_function(automaton, word)
+                final_state = automaton_function(automaton, word)
                 # generates token based on the final state of the automata
-                    # given the final state of the automaton,  determine token
-                    # tuple in the form (token, word, attributes)
-                # if the token is an id,  verify if it's already in the symbol table
-                    # if so, return the token that is already on the table
+                token = generate_token(final_state, word)
             #  if the automaton throws an Exception,  the token will be:
             # ("ERROR", f"ERROR: invalid symbol at {line_number}: "{word}"", "{line_number}, {word_number}")
             except Exception:
-                token = ("ERROR", f"ERROR: invalid symbol at {line_number}: \"{word}\"", f"{line_number}, {word_number}")
+                error_message = f"ERROR: invalid symbol at {line_number}: \"{word}\""
+                token = ("ERROR", error_message, f'line:{line_number} word:{word_number}')
                 #  also print: f"ERROR: invalid symbol at {line_number}: "{word}""
+                print(error_message)
             # yields the token tuple
             # unless the token is a comment, in which case, just continue to the next word
-            if token[0] == "":
+            if token[1] == "":
                 continue
             else:
                 yield token
     # as soon as the loop ends,  generate token ("EOF", "", "")
-    token = ("EOF", "", "")
+    token = ("", "EOF", "")
     # yields the token tuple
     yield token

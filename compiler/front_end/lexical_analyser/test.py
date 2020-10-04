@@ -1,4 +1,4 @@
-from compiler.front_end.lexical_analyser.lexical_analyser import Automata
+from compiler.front_end.lexical_analyser.automata_class import Automata
 
 transition_table = {
     'q0': {'a': 'q1'},
@@ -6,7 +6,6 @@ transition_table = {
     'q2': {'c': 'q3', 'a': 'q4'},
     'q3': {'d': 'q4'},
     'q4': {'a': 'q3'},
-    'pit': {},
 }
 initial_state = 'q0'
 final_state = ['q2', 'q4']

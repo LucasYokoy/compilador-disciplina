@@ -16,7 +16,7 @@ def syntactical_analyser_function(input_path):
         # wraps in a while loop
         analyser = laf()
         token = ("", "", "")
-        while token[0] != 'EOF':
+        while token[1] != 'EOF':
             # calls the next() on the lexical analyser function
             # finishes when the lexical analyser returns the END_OF_FILE token
             token = next(analyser)
