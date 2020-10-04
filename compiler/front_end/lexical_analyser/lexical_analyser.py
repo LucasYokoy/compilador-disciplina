@@ -94,24 +94,35 @@ def automaton_function(automaton, word):
 
 # analyser function:
 def lexical_analyser_function():
-    for i in range(10):
-        yield "stub", "", ""
-    yield "EOF", "", ""
     # sets up the automaton
     automaton = Automata()
     # uses a generator
-        # loops through each line on the split code (with the number of the line)
-            # loops through each word on the line
-                #  wrap in try catch
-                    # calls the automaton function for that word
-                    # generates token based on the final state of the automata
-                        # given the final state of the automaton,  determine token
-                        # tuple in the form (token, word, attributes)
-                    # if the token is an id,  verify if it's already in the symbol table
-                        # if so, return the token that is already on the table
-                #  if the automaton throws an Exception,  the token will be:
-                # ("ERROR", f"ERROR: invalid symbol at {line_number}: "{word}"", "{line_number}, {word_number}")
-                    #  also print: f"ERROR: invalid symbol at {line_number}: "{word}""
-                #  yields the token tuple
-        # as soon as the loop ends,  generate token ("EOF", "", "")
+    # loops through each line on the split code (with the number of the line)
+    for line_number, line in enumerate(split_code):
+        # loops through each word on the line
+        for word_number, word in enumerate(line):
+            #  wrap in try catch
+            # noinspection PyBroadException
+            try:
+                # calls the automaton function for that word
+                type = automaton_function(automaton, word)
+                # generates token based on the final state of the automata
+                    # given the final state of the automaton,  determine token
+                    # tuple in the form (token, word, attributes)
+                # if the token is an id,  verify if it's already in the symbol table
+                    # if so, return the token that is already on the table
+            #  if the automaton throws an Exception,  the token will be:
+            # ("ERROR", f"ERROR: invalid symbol at {line_number}: "{word}"", "{line_number}, {word_number}")
+            except Exception:
+                token = ("ERROR", f"ERROR: invalid symbol at {line_number}: \"{word}\"", f"{line_number}, {word_number}")
+                #  also print: f"ERROR: invalid symbol at {line_number}: "{word}""
             # yields the token tuple
+            # unless the token is a comment, in which case, just continue to the next word
+            if token[0] == "":
+                continue
+            else:
+                yield token
+    # as soon as the loop ends,  generate token ("EOF", "", "")
+    token = ("EOF", "", "")
+    # yields the token tuple
+    yield token
