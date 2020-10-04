@@ -4,6 +4,8 @@ class Automata:
         # estado final deve ser uma lista de strings, cada uma com os nomes dos estados finais
         # transition_table_dict deve ser um dicionário de dicionários de strings para strings
         # na seguinte forma: tabela[estado_atual][input] => 'estado_futuro'
+        # na tabela de transição, sempre deve haver um estado chamado 'pit', que é o "calabouço"
+        # o calabouço deve ter o formato 'pit': {} pois não se pode sair dele
         self.state = initial_state
         self.initial_state = initial_state
         self.final_states = final_states
@@ -11,7 +13,11 @@ class Automata:
 
     def state_transition(self, char_input):
         # makes the transition to the next state
-        self.state = self.transition_table[self.state][char_input]
+        # if the character read is invalid, jump to pit state and proceed
+        try:
+            self.state = self.transition_table[self.state][char_input]
+        except KeyError:
+            self.state = 'pit'
 
     def reset_state(self):
         # resets state back to the initial state

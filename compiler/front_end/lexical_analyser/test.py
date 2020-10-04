@@ -5,7 +5,8 @@ transition_table = {
     'q1': {'b': 'q2'},
     'q2': {'c': 'q3', 'a': 'q4'},
     'q3': {'d': 'q4'},
-    'q4': {'a': 'q3'}
+    'q4': {'a': 'q3'},
+    'pit': {},
 }
 initial_state = 'q0'
 final_state = ['q2', 'q4']
