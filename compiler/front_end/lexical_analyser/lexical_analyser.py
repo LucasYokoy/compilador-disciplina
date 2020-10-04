@@ -44,6 +44,13 @@ def code_splitter(path):
                 match_altered = re.sub(r" ", temp_separator, match)
                 new_line = new_line.replace(match, match_altered)
 
+        # then detect exponents and erases spaces, to make sure they count as a single word during compilation.
+        string_list = re.findall(r"\d+\.?\d*\s*[Ee]\s*[+-]?\s*\d+", new_line)
+        if string_list:
+            for match in string_list:
+                match_altered = re.sub(r" ", temp_separator, match)
+                new_line = new_line.replace(match, match_altered)
+
         # turn that list of string into a list of lists of words, separating the strings on the list by blank space
         new_line = new_line.split()
 
@@ -59,7 +66,7 @@ def code_splitter(path):
 # takes a character as argument
 def character_classifier(character):
     # classifies the character as letter,  digit,  or special symbol
-    alphabet = 'abcdefghijklmnopqrstuvwxyzãõáéíóúâêîôûüç'
+    alphabet = 'abcdfghijklmnopqrstuvwxyzãõáíóúâîôûüç'
     alphabet = alphabet + alphabet.upper()
     numbers = '1234567890'
     # checks all possibilities on a stream of if else,  and returns the type as a corresponding number.
@@ -69,6 +76,9 @@ def character_classifier(character):
     # if it's a digit, return D
     elif character in numbers:
         return 'D'
+    # if it's a point, return P
+    elif character == '.':
+        return 'P'
     else:
     # else, return the character itself (implies it's a ;, ), (,  etc).
         return character
