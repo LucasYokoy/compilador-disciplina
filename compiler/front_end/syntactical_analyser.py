@@ -21,6 +21,7 @@ def syntactical_analyser_function(input_path):
             # finishes when the lexical analyser returns the END_OF_FILE token
             token = next(analyser)
             # appends tuple to the symbol table
+            print(token)
             symbol_table.append(token)
         # if an error is thrown by the LA, display error message and continue
     except FileNotFoundError:
