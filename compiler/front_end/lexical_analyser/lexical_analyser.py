@@ -107,6 +107,12 @@ RESERVED_WORDS = ['inicio', 'varinicio', 'varfim', 'escreva', 'leia', 'se', 'ent
 
 
 def generate_token(final_state, word):
+    Dict =  {"q1": "id", "q2": "Num", "q4": "Num", "q7": "Num", "q9": "comment", "q10": "OPR", "q11": "OPR", "q12": "OPR",
+     "q13": "RCB", "q14": "OPR", "q15": "OPR", "q16": "OPR", "q17": "OPM", "q18": "OPM", "q19": "OPM", "q20": "OPM",
+     "q21": "PT_V", "q22": "FC_P", "q23": "AB_P", "q26": "Literal"}
+
+    final_state = Dict[final_state]
+
     # given the final state of the automaton, determine token
     # tuple in the form (lexeme, token, type='') the last parameter should be null, as required
     # if the token is a reserved word, the token will be a ('word', 'word', '')
@@ -123,6 +129,7 @@ def generate_token(final_state, word):
     if final_state == 'comment':
         return '', '', ''
     # if it's anything else, return the word and the final_state
+
     return word, final_state, ''
 
 
