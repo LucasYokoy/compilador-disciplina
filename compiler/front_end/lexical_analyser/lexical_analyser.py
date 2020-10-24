@@ -1,4 +1,3 @@
-# imports the symbol_table
 from compiler.symbol_table import symbol_table
 import compiler.front_end.lexical_analyser.mgol_automaton as mgol_a
 import re
@@ -163,6 +162,8 @@ def lexical_analyser_function():
             if token[1] == "":
                 continue
             else:
+                if token[1] == 'id' or token[1] in RESERVED_WORDS:
+                    symbol_table.append(token)
                 yield token
     # as soon as the loop ends,  generate token ("EOF", "", "")
     token = ("", "EOF", "")

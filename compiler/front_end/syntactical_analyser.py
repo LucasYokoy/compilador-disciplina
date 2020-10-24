@@ -22,7 +22,6 @@ def syntactical_analyser_function(input_path):
             token = next(analyser)
             # appends tuple to the symbol table
             print(token)
-            symbol_table.append(token)
         # if an error is thrown by the LA, display error message and continue
     except FileNotFoundError:
         print("ERROR: invalid file path")
@@ -31,5 +30,5 @@ def syntactical_analyser_function(input_path):
 
 
 if __name__ == "__main__":
-    path = "C:/Users/Lucas/Documents/Compilador/compiler/test/test_file.txt"
+    path = "D:\Documentos\Compilador\compiler\\test\\test_file.txt"
     syntactical_analyser_function(input_path=path)
