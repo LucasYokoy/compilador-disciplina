@@ -16,8 +16,8 @@ class Automata:
         # makes the transition to the next state
         # if the character read is invalid, jump to pit state and proceed
         try:
-            accepted_inputs = list(self.transition_table[self.state].keys())
             possible_transitions = self.transition_table[self.state]
+            accepted_inputs = list(possible_transitions.keys())
             if '.' in accepted_inputs:
                 if char_input in accepted_inputs:
                     self.state = possible_transitions[char_input]
