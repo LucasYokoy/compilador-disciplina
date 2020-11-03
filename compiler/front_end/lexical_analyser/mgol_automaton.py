@@ -1,4 +1,4 @@
-from compiler.front_end.lexical_analyser.automata_class import Automata
+from compiler.utils.automata_class import Automata
 
 transition_table = {
     'q0': {'L': 'q1', 'E': 'q1', 'e': 'q1', 'D': 'q2', '{': 'q8', '<': 'q10', '>': 'q14', '=': 'q16', '+': 'q17',

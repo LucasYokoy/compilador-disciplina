@@ -1,7 +1,7 @@
 from compiler.symbol_table import symbol_table
 import compiler.front_end.lexical_analyser.mgol_automaton as mgol_a
 import re
-from compiler.front_end.lexical_analyser.automata_class import Automata
+from compiler.utils.automata_class import Automata
 
 
 # global variable: split code

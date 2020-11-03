@@ -29,6 +29,13 @@ def syntactical_analyser_function(input_path):
     print(symbol_table)
 
 
+# receber o próximo token
+    # deve também receber a linha e a coluna do token recebido, para mostrar em caso de erro
+# passar token pelo autômato
+    # autômato retorna o novo estado e a ação a ser realizada
+# realizar a ação na pilha
+# repetir até chegar no token EOF
+
 if __name__ == "__main__":
-    path = "D:\Documentos\Compilador\compiler\\test\\test_file.txt"
+    path = "/compiler/test/test_file.txt"
     syntactical_analyser_function(input_path=path)
