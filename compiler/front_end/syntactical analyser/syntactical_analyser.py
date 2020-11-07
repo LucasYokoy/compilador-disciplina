@@ -5,8 +5,7 @@
 from compiler.front_end.lexical_analyser.lexical_analyser import lexical_analyser_function as laf
 from compiler.front_end.lexical_analyser.lexical_analyser import code_splitter
 from compiler.symbol_table import symbol_table
-from .lr_automaton import automaton
-
+from .lr_automaton import lr_automaton
 
 """
 construir a tabela shift-reduce:
@@ -35,54 +34,32 @@ def generate_lexical(input_path):
         print("ERROR: invalid file path")
 
 
-class Stack:
-    def __init__(self):
-        self.__list = []
-
-    def push(self, key):
-        self.__list.append(key)
-
-    def pop(self):
-        return self.__list.pop()
-
-    def top(self):
-        return self.__list[-1]
-
-    def size(self):
-        return len(self.__list)
-
-    def is_empty(self):
-        return len(self.__list) == 0
-
-
 def automaton_function(_automaton, token):
     _automaton.state_transition(char_input=token[1])
     return _automaton.get_state()
 
 
-def slr_analyser(_stack, state, input):
+def lr_analyser(_stack, _state, _input):
+    # pseudocódigo do livro do dragão
+    pass
 
 
-
-def syntactical_analyser_function(input_path):
+def syntactical_analyser_function(_automaton, input_path):
     generator = generate_lexical(input_path)
-    stack = Stack()
     last_token = ('', '', '')
-    automaton.reset_state()
+    _automaton.reset()
     while last_token[1] != 'EOF':
         # receber o próximo token
             # deve também receber a linha e a coluna do token recebido, para mostrar em caso de erro
         token, line_number, word_number = next(generator)
         # passar token pelo autômato
             # autômato retorna o novo estado e a ação a ser realizada
-        state, action = automaton_function(automaton, token)
         # realizar a ação na pilha
             # usar classe customizada como stack
-
     
     # repetir até chegar no token EOF
 
 
 if __name__ == "__main__":
     path = "/compiler/test/test_file.txt"
-    syntactical_analyser_function(input_path=path)
+    syntactical_analyser_function(_automaton=lr_automaton, input_path=path)

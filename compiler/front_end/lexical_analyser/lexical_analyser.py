@@ -165,8 +165,15 @@ def lexical_analyser_function():
                 if token[1] == 'id' or token[1] in RESERVED_WORDS:
                     symbol_table.append(token)
                 # always return the token, the line number and the word number for the syntactical analyser
-                yield token, line_number, word_number
+                # also return whether or not the buffer for the sentence has ended
+                end_of_line = False
+                yield token, line_number, word_number, end_of_line
+        # return that the buffer has ended
+        end_of_line = True
+        yield token, line_number, word_number, end_of_line
     # as soon as the loop ends,  generate token ("EOF", "", "")
+    # also return that the buffer has ended
+    end_of_line = True
     token = ("", "EOF", "")
     # yields the token tuple
-    yield token, line_number, word_number
+    yield token, line_number, word_number, end_of_line
