@@ -164,8 +164,9 @@ def lexical_analyser_function():
             else:
                 if token[1] == 'id' or token[1] in RESERVED_WORDS:
                     symbol_table.append(token)
-                yield token
+                # always return the token, the line number and the word number for the syntactical analyser
+                yield token, line_number, word_number
     # as soon as the loop ends,  generate token ("EOF", "", "")
     token = ("", "EOF", "")
     # yields the token tuple
-    yield token
+    yield token, line_number, word_number
