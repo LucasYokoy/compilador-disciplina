@@ -12,7 +12,7 @@ first = {	 "P'":       	 {"inicio"},
 			 "ARG":      	 {"literal", "num", "id"},
 			 "LD":       	 {"id", "num"},
 			 "OPRD":     	 {"id", "num"},
-			 "CORPO":    	 {"fimse", "leia", "escreva", "id", "se"}
+			 "CORPO":    	 {"fimse", "leia", "escreva", "id", "se"},
 			 "EXP_R":    	 {"id", "num"}
 }
 
@@ -30,7 +30,7 @@ follow = {	"P'":     	     {"$"},
 			"ARG":       	 {";"},
 			"LD":        	 {";"},
 			"OPRD":      	 {"opm", "opr", ";", ")"},
-			"CORPO":     	 {"fimse", "leia", "escreva", "id", "se", "fim"}
+			"CORPO":     	 {"fimse", "leia", "escreva", "id", "se", "fim"},
 			"EXP_R":     	 {")"}
 
 }
