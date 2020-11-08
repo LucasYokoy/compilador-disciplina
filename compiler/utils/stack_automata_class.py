@@ -1,11 +1,12 @@
-class Stack:
-    def __init__(self):
-        self.__list = []
+class _Stack:
+    def __init__(self, initial_state):
+        self.__empty_stack = ['$', initial_state]
+        self.__list = self.__empty_stack
 
-    def push(self, key):
+    def shift(self, key):
         self.__list.append(key)
 
-    def pop(self, n=0):
+    def reduce(self, n=1):
         return self.__list.pop(n)
 
     def top(self):
@@ -17,8 +18,8 @@ class Stack:
     def is_empty(self):
         return len(self.__list) == 0
 
-    def reset(self):
-        self.__list = []
+    def reset_stack(self):
+        self.__list = self.__empty_stack
 
 
 class SyntacticTable:
@@ -45,34 +46,36 @@ class StackAutomata:
         # mas não há calabouço, apenas estados de erro definidos na própria definição da tabela sintática
         # também não há a necessidade de implementar a transição '.'
         # também não há função finish que retorna o estado final, apenas as funções reset e get_state
-        self.state = _initial_state
-        self.initial_state = _initial_state
-        self.stack = Stack()
+        self.stack = _Stack(_initial_state)
         self.syntactic_table = _table
 
     def automata_goto(self, char_input):
-        # makes the transition to the next state
-        # then return the new state (it'll be useful for the syntactic analyser)
-        self.state = self.syntactic_table.goto(state=self.state, symbol=char_input)
-        return self.state
+        # stack the state defined in the goto table at goto[state, input]
+        # then return the new state (it might be useful for the syntactic analyser)
+        state = self.stack.top()
+        state = self.syntactic_table.goto(state=state, symbol=char_input)
+        self.stack.shift(state)
 
-    def stack_action(self, char_input):
-        # perform a stack action
-        # first look up the action table, given the state and the input
-        # then perform the action on the stack
-        action = self.syntactic_table.action(state=self.state, symbol=char_input)
-        # there are 4 possible values for action:
-            # shift
-            # reduce
-            # error
-            # accept
+    def automata_action(self, char_input):
+        # takes the input and searches for the action on the action_list
+        state = self.stack.top()
+        return self.syntactic_table.action(state=state, symbol=char_input)
+        # there are 4 possible values for action: shift, reduce, error, accept
+        # they each must have their own function, except accept and error
+
+    def stack_shift(self, value):
+        # shifts a value into the stack
+        self.stack.shift(value)
+
+    def stack_reduce(self, n):
+        # pops n items from the stack
+        self.stack.reduce(n)
+        pass
 
     def reset(self):
         # resets state back to the initial state
-        self.state = self.initial_state
-        self.stack.reset()
+        self.stack.reset_stack()
 
     def get_state(self):
         # return the current state
-        return self.state
-
+        return self.stack.top()

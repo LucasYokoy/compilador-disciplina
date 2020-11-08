@@ -49,13 +49,14 @@ def syntactical_analyser_function(_automaton, input_path):
     last_token = ('', '', '')
     _automaton.reset()
     while last_token[1] != 'EOF':
-        # receber o próximo token
-            # deve também receber a linha e a coluna do token recebido, para mostrar em caso de erro
-        token, line_number, word_number = next(generator)
-        # passar token pelo autômato
-            # autômato retorna o novo estado e a ação a ser realizada
-        # realizar a ação na pilha
-            # usar classe customizada como stack
+        pass
+        # receber o próximo token além da linha e a coluna do token recebido, para mostrar em caso de erro
+        # entrega o token para o lr_analyser(livro do dragão)
+        # verifica se chegamos no final da pilha, ou se o buffer acabou
+            # se sim, verificar se o string foi aceito.
+                # se não tiver sido aceito, iniciar rotina de recuperação de erro.
+                # se sim, resetar autômato e continuar para para o próximo token.
+            # se não, continuar para o próximo token
     
     # repetir até chegar no token EOF
 
