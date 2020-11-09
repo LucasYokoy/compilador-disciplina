@@ -107,7 +107,8 @@ def automaton_function(automaton, word):
         return final_state
 
 
-RESERVED_WORDS = ['inicio', 'varinicio', 'varfim', 'escreva', 'leia', 'se', 'entao', 'fimse', 'fim']
+RESERVED_WORDS = ['inicio', 'varinicio', 'varfim', 'escreva', 'leia', 'se', 'entao',
+                  'fimse', 'fim', 'lit', 'real', 'inteiro']
 
 
 def generate_token(final_state, word):
@@ -129,13 +130,6 @@ def generate_token(final_state, word):
         for token in symbol_table:
             if token[0] == word:
                 return token
-    # if the token is a type declaration, return the corresponding token
-    if word == 'literal':
-        return word, 'lit', ''
-    if word == 'inteiro':
-        return word, 'int', ''
-    if word == 'real':
-        return word, word, ''
     # if it's a comment, return an empty token
     if final_state == 'comment':
         return '', '', ''
