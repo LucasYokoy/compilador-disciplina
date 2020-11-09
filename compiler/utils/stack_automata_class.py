@@ -50,8 +50,7 @@ class StackAutomata:
         self.syntactic_table = _table
 
     def automata_goto(self, char_input):
-        # stack the state defined in the goto table at goto[state, input]
-        # then return the new state (it might be useful for the syntactic analyser)
+        # takes the input and searches for the goto state on the goto_list
         state = self.stack.top()
         return self.syntactic_table.goto(state=state, symbol=char_input)
 
