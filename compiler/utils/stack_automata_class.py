@@ -53,8 +53,7 @@ class StackAutomata:
         # stack the state defined in the goto table at goto[state, input]
         # then return the new state (it might be useful for the syntactic analyser)
         state = self.stack.top()
-        state = self.syntactic_table.goto(state=state, symbol=char_input)
-        self.stack.shift(state)
+        return self.syntactic_table.goto(state=state, symbol=char_input)
 
     def automata_action(self, char_input):
         # takes the input and searches for the action on the action_list
@@ -70,7 +69,6 @@ class StackAutomata:
     def stack_reduce(self, n):
         # pops n items from the stack
         self.stack.reduce(n)
-        pass
 
     def reset(self):
         # resets state back to the initial state

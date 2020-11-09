@@ -77,19 +77,20 @@ def syntactical_analyser_function(_automaton, _grammar, _input_path):
                 _automaton.stack_reduce(len(b))
         #        seja t o novo topo da pilha;
         #        empilhe GOTO[t,A];
-                _automaton.automata_goto(a_rule)
+                goto = _automaton.automata_goto(a_rule)
+                if goto != 'ERROR':
+                    _automaton.stack_shift(goto)
         #        imprima a produção A->b
                 print(f'{a_rule} -> {" ".join(b)}')
         #    } else if (ACTION[s,a] = accept) {
             elif action[0] == 'A':
         #        a análise terminou e foi bem sucedida
-        #        retornar finished_buffer = True, final_state = 'Acc'
+        #        retornar finished_buffer = True
                 finished_buffer = True
-                final_state = action
         #    } else chame rotina de recuperação de erro
             else:
                 error_recovery()
-        #        se não conseguir recuperar, retornar finished_buffer = True, final_state='ERROR'
+        #        se não conseguir recuperar, retornar finished_buffer = True
         # }
         # caso tenha ocorrido um erro não recuperado:
             # imprimir mensagem de erro com o número de linha, coluna e descrição
