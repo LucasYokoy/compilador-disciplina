@@ -6,7 +6,7 @@ from compiler.utils.stack_automata_class import SyntacticTable
 # se não houver o símbolo na tabela, retornar ERROR
 # a tabela goto deve ser implementada da mesma forma. mas envez de uma ação, terá o novo estado
 
-action_table = {    ('0', 'id'):             'S31',
+action_table = {    ('0', 'inicio'):         'S2',
                     ('1', '$'):              'Acc',
                     ('2', 'varinicio'):      'S16',
                     ('3', 'id'):             'S29',
