@@ -228,6 +228,6 @@ goto_table = {      ('0', 'P'):              '1',
 }
 
 table = SyntacticTable(_action_table=action_table, _goto_table=goto_table)
-initial_state = ''
+initial_state = '0'
 
 lr_automaton = StackAutomata(_table=table, _initial_state=initial_state)

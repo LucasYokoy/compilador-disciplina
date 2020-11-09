@@ -140,9 +140,13 @@ def lexical_analyser_function():
                          final_states=mgol_a.final_states)
     # uses a generator
     # loops through each line on the split code (with the number of the line)
-    for line_number, line in enumerate(split_code):
+    line_number = 0
+    word_number = 0
+    for ln, line in enumerate(split_code):
+        line_number = ln
         # loops through each word on the line
-        for word_number, word in enumerate(line):
+        for wn, word in enumerate(line):
+            word_number = wn
             #  wrap in try catch
             # noinspection PyBroadException
             try:
@@ -165,15 +169,11 @@ def lexical_analyser_function():
                 if token[1] == 'id' or token[1] in RESERVED_WORDS:
                     symbol_table.append(token)
                 # always return the token, the line number and the word number for the syntactical analyser
-                # also return whether or not the buffer for the sentence has ended
-                end_of_line = False
-                yield token, line_number, word_number, end_of_line
-        # return that the buffer has ended
-        end_of_line = True
-        yield token, line_number, word_number, end_of_line
+                yield token, line_number, word_number
+        # return that the line (buffer) has ended, by sending the $ symbol
+        token = ('$', '$', '')
+        yield token, line_number, word_number
     # as soon as the loop ends,  generate token ("EOF", "", "")
-    # also return that the buffer has ended
-    end_of_line = True
     token = ("", "EOF", "")
     # yields the token tuple
-    yield token, line_number, word_number, end_of_line
+    yield token, line_number, word_number

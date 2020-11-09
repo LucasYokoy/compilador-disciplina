@@ -1,13 +1,13 @@
 class _Stack:
     def __init__(self, initial_state):
-        self.__empty_stack = ['$', initial_state]
+        self.__empty_stack = [initial_state]
         self.__list = self.__empty_stack
 
-    def shift(self, key):
-        self.__list.append(key)
+    def shift(self, value):
+        self.__list.append(value)
 
     def reduce(self, n=1):
-        return self.__list.pop(n)
+        del self.__list[-n:]
 
     def top(self):
         return self.__list[-1]
