@@ -49,14 +49,12 @@ class StackAutomata:
         self.stack = _Stack(_initial_state)
         self.syntactic_table = _table
 
-    def automata_goto(self, char_input):
+    def automata_goto(self, state, char_input):
         # takes the input and searches for the goto state on the goto_list
-        state = self.stack.top()
         return self.syntactic_table.goto(state=state, symbol=char_input)
 
-    def automata_action(self, char_input):
+    def automata_action(self, state, char_input):
         # takes the input and searches for the action on the action_list
-        state = self.stack.top()
         return self.syntactic_table.action(state=state, symbol=char_input)
         # there are 4 possible values for action: shift, reduce, error, accept
         # they each must have their own function, except accept and error

@@ -35,17 +35,34 @@ def generate_lexical(input_path):
         print("ERROR: invalid file path")
 
 
-def error_recovery(_automaton, _token, _line_number, _word_number):
-    # TODO: modo pânico para recuperação de erro
+def error_recovery(_generator, _token, _line_number, _word_number):
     # retorne True se o erro não tiver sido recuperado e a análise desse buffer for terminada, e False se não.
-    print(f'Syntax error: erro sintático na linha {_line_number}: \"{" ".join(code_line(_line_number))}\" '
-          f'sintaxe inválida em {_token[0]}')
-    # erro não recuperado, portanto retornar True
-    return True
+    # modo pânico: chamar todos os próximos tokens, até encontrar um token de sincronização ';'
+    # caso não seja encontrado, o erro não foi recuperado
+    # primeiramente, indicar que houve um erro na linha e coluna atual, depois tentar recuperar
+    # depois, retornar o próximo token viável (atual, se a=='eof', próximo se a=='pt_v')
+    print(f'Syntax error: erro sintático na linha {_line_number}, na posição {_word_number}:'
+          f' \"{" ".join(code_line(_line_number))}\" sintaxe inválida em {_token[0]}')
+    a = ''
+    while a not in ['eof', 'pt_v']:
+        a, token, line_number, word_number = new_token(_generator)
+    if a == 'pt_v':
+        a, token, line_number, word_number = new_token(_generator)
+    # retornar o próximo token viável para continuar a análise
+
+    return a, token, line_number, word_number
 
 
 def get_prod_rule(_grammar, _index):
     return _grammar[_index]
+
+
+def new_token(_generator):
+    token = ('', '', '')
+    while token == ('', '', ''):
+        token, line_number, word_number = next(_generator)
+    a = token[1]
+    return a, token, line_number, word_number
 
 
 def syntactical_analyser_function(_automaton, _grammar, _input_path):
@@ -53,51 +70,47 @@ def syntactical_analyser_function(_automaton, _grammar, _input_path):
     last_token = ''
     _automaton.reset()
     # repetir até chegar no token EOF
-    while last_token != 'EOF':
-        # pseucódigo do livro do dragão
-        # seja a o primeiro símbolo de w$ no começo da análise
-        token, line_number, word_number = next(generator)
-        a = token[1]
-        # finished_buffer = False
-        finished_buffer = False
-        # while (finished_buffer = False){
-        while not finished_buffer:
+    # pseucódigo do livro do dragão
+    # seja a o primeiro símbolo de w$ no começo da análise
+    a, token, line_number, word_number = new_token(generator)
+    while last_token != 'eof':
         #   seja s o estado no topo da pilha;
+        s = _automaton.get_state()
         #    if(ACTION[s,a] = shift t){
-            action = _automaton.automata_action(a)
-            if action[0] == 'S':
-        #        empilhe t;
-                t = action[1:]
-                _automaton.stack_shift(t)
-        #        a recebe o próximo símbolo da entrada;
-                token, line_number, word_number = next(generator)
-                a = token[1]
-        #    } else if (ACTION[s,a] = reduce A->b){
-            elif action[0] == 'R':
-        #       verificar quais são os valores de A e b no arquivo mgol_grammar.py
-                index = action[1:]
-                a_rule, b = get_prod_rule(_grammar=_grammar, _index=index)
-        #        desempilha len(b) símbolos da pilha;
-                _automaton.stack_reduce(len(b))
-        #        seja t o novo topo da pilha;
-        #        empilhe GOTO[t,A];
-                goto = _automaton.automata_goto(a_rule)
-                if goto != 'ERROR':
-                    _automaton.stack_shift(goto)
-        #        imprima a produção A->b
-                print(f'{a_rule} -> {" ".join(b)}')
-        #    } else if (ACTION[s,a] = accept) {
-            elif action[0] == 'A':
-        #        a análise terminou e foi bem sucedida
-        #        retornar finished_buffer = True
-                finished_buffer = True
-        #    } else chame rotina de recuperação de erro
-            else:
-        #        se não conseguir recuperar, retornar finished_buffer = True
-                finished_buffer = error_recovery(_automaton, token, line_number, word_number)
+        action = _automaton.automata_action(s, a)
+        if action[0] == 'S':
+    #        empilhe t;
+            t = action[1:]
+            _automaton.stack_shift(t)
+    #        a recebe o próximo símbolo da entrada;
+            a, token, line_number, word_number = new_token(generator)
+    #    } else if (ACTION[s,a] = reduce A->b){
+        elif action[0] == 'R':
+    #       verificar quais são os valores de A e b no arquivo mgol_grammar.py
+            index = action[1:]
+            a_rule, b = get_prod_rule(_grammar=_grammar, _index=index)
+    #        desempilha len(b) símbolos da pilha;
+            _automaton.stack_reduce(len(b))
+    #        seja t o novo topo da pilha;
+            t = _automaton.get_state()
+    #        empilhe GOTO[t,A];
+            goto = _automaton.automata_goto(t, a_rule)
+            if goto != 'ERROR':
+                _automaton.stack_shift(goto)
+    #        imprima a produção A->b
+            print(f'{a_rule} -> {" ".join(b)}')
+    #    } else if (ACTION[s,a] = accept) {
+        elif action[0] == 'A':
+    #        a análise terminou e foi bem sucedida
+            break
+    #    } else chame rotina de recuperação de erro
+        else:
+    #        retornar a próxima posição viável para continuar a análise
+            last_token, token, line_number, word_number = error_recovery(generator, token, line_number, word_number)
+            # # resetar autômato para continuar a análise
+            # _automaton.reset()
         # }
-        # resetar autômato e atualizar o valor de last_token
-        _automaton.reset()
+        # atualizar o valor de last_token
         last_token = token[1]
 
 

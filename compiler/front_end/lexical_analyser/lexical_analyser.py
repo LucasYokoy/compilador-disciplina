@@ -176,10 +176,11 @@ def lexical_analyser_function():
                     symbol_table.append(token)
                 # always return the token, the line number and the word number for the syntactical_analyser
                 yield token, line_number, word_number
-        # return that the line (buffer) has ended, by sending the $ symbol
-        token = ('$', '$', '')
-        yield token, line_number, word_number
+            # return that the line (buffer) has ended, by sending the $ symbol at the end of the sentence
+            # if token[1] == 'pt_v':
+            #     token = ('$', '$', '')
+            #     yield token, line_number, word_number
     # as soon as the loop ends,  generate token ("EOF", "", "")
-    token = ("", "EOF", "")
+    token = ("", "eof", "")
     # yields the token tuple
     yield token, line_number, word_number
