@@ -61,6 +61,11 @@ def code_splitter(path):
         split_code[line_number] = new_line
 
 
+# return a line of the split code
+def code_line(index):
+    return split_code[index]
+
+
 # character classifier function:
 # takes a character as argument
 def character_classifier(character):
@@ -106,11 +111,11 @@ RESERVED_WORDS = ['inicio', 'varinicio', 'varfim', 'escreva', 'leia', 'se', 'ent
 
 
 def generate_token(final_state, word):
-    Dict =  {"q1": "id", "q2": "Num", "q4": "Num", "q7": "Num", "q9": "comment", "q10": "OPR", "q11": "OPR", "q12": "OPR",
-     "q13": "RCB", "q14": "OPR", "q15": "OPR", "q16": "OPR", "q17": "OPM", "q18": "OPM", "q19": "OPM", "q20": "OPM",
-     "q21": "PT_V", "q22": "FC_P", "q23": "AB_P", "q26": "Literal"}
+    c_dict = {"q1": "id", "q2": "num", "q4": "num", "q7": "num", "q9": "comment", "q10": "opr", "q11": "opr",
+              "q12": "opr", "q13": "rcb", "q14": "opr", "q15": "opr", "q16": "opr", "q17": "opm", "q18": "opm",
+              "q19": "opm", "q20": "opm", "q21": "pt_v", "q22": "fc_p", "q23": "ab_p", "q26": "literal"}
 
-    final_state = Dict[final_state]
+    final_state = c_dict[final_state]
 
     # given the final state of the automaton, determine token
     # tuple in the form (lexeme, token, type='') the last parameter should be null, as required
@@ -124,6 +129,13 @@ def generate_token(final_state, word):
         for token in symbol_table:
             if token[0] == word:
                 return token
+    # if the token is a type declaration, return the corresponding token
+    if word == 'literal':
+        return word, 'lit', ''
+    if word == 'inteiro':
+        return word, 'int', ''
+    if word == 'real':
+        return word, word, ''
     # if it's a comment, return an empty token
     if final_state == 'comment':
         return '', '', ''
@@ -168,7 +180,7 @@ def lexical_analyser_function():
             else:
                 if token[1] == 'id' or token[1] in RESERVED_WORDS:
                     symbol_table.append(token)
-                # always return the token, the line number and the word number for the syntactical analyser
+                # always return the token, the line number and the word number for the syntactical_analyser
                 yield token, line_number, word_number
         # return that the line (buffer) has ended, by sending the $ symbol
         token = ('$', '$', '')

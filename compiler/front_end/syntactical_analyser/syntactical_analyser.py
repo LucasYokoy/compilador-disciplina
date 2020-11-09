@@ -2,11 +2,11 @@
 # imports the lexical analyser (LA) as a function
 # imports the code_splitter
 # from compiler.front_end import lexical_analyser as LA
-from compiler.front_end.lexical_analyser.lexical_analyser import lexical_analyser_function as laf
+from compiler.front_end.lexical_analyser.lexical_analyser import code_line
 from compiler.front_end.lexical_analyser.lexical_analyser import code_splitter
-from compiler.symbol_table import symbol_table
-from .lr_automaton import lr_automaton
-from .mgol_grammar import production_rule
+from compiler.front_end.lexical_analyser.lexical_analyser import lexical_analyser_function as laf
+from compiler.front_end.syntactical_analyser.lr_automaton import lr_automaton
+from compiler.front_end.syntactical_analyser.mgol_grammar import production_rule
 
 """
 construir a tabela shift-reduce:
@@ -35,9 +35,13 @@ def generate_lexical(input_path):
         print("ERROR: invalid file path")
 
 
-def error_recovery():
+def error_recovery(_automaton, _token, _line_number, _word_number):
     # TODO: modo pânico para recuperação de erro
-    pass
+    # retorne True se o erro não tiver sido recuperado e a análise desse buffer for terminada, e False se não.
+    print(f'Syntax error: erro sintático na linha {_line_number}: \"{" ".join(code_line(_line_number))}\" '
+          f'sintaxe inválida em {_token[0]}')
+    # erro não recuperado, portanto retornar True
+    return True
 
 
 def get_prod_rule(_grammar, _index):
@@ -89,16 +93,14 @@ def syntactical_analyser_function(_automaton, _grammar, _input_path):
                 finished_buffer = True
         #    } else chame rotina de recuperação de erro
             else:
-                error_recovery()
         #        se não conseguir recuperar, retornar finished_buffer = True
+                finished_buffer = error_recovery(_automaton, token, line_number, word_number)
         # }
-        # caso tenha ocorrido um erro não recuperado:
-            # imprimir mensagem de erro com o número de linha, coluna e descrição
         # resetar autômato e atualizar o valor de last_token
         _automaton.reset()
-        last_token = token
+        last_token = token[1]
 
 
 if __name__ == "__main__":
-    path = "/compiler/test/test_file.txt"
+    path = "D:\\Documentos\\Compilador\\compiler\\test\\test_file.txt"
     syntactical_analyser_function(_automaton=lr_automaton, _grammar=production_rule, _input_path=path)
