@@ -149,10 +149,10 @@ def lexical_analyser_function():
     line_number = 0
     word_number = 0
     for ln, line in enumerate(split_code):
-        line_number = ln
+        line_number = ln + 1
         # loops through each word on the line
         for wn, word in enumerate(line):
-            word_number = wn
+            word_number = wn + 1
             #  wrap in try catch
             # noinspection PyBroadException
             try:
